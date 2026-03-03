@@ -2,13 +2,13 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define MAX_VERTICES 8
-#define MAX_FACES 6
 #define MATRIX_SIZE 30
 
 //vértice 3D
 typedef struct {
     float x, y, z;
+    char id;
+
 } Vertex;
 
 //face com 4 vértices
@@ -17,29 +17,27 @@ typedef struct {
 } Face;
 
 //dados do cubo (Shared Vertex)
-
-Vertex vertices[MAX_VERTICES] = {
-    {-1, -1, -1}, // v0
-    { 1, -1, -1}, // v1
-    { 1,  1, -1}, // v2
-    {-1,  1, -1}, // v3
-    {-1, -1,  1}, // v4
-    { 1, -1,  1}, // v5
-    { 1,  1,  1}, // v6
-    {-1,  1,  1}  // v7
+Vertex vertices[8] = {
+    //face frontal (z = -1)
+    {-1, -1, -1, 'A'}, // v0
+    { 1, -1, -1, 'B'}, // v1
+    { 1,  1, -1, 'C'}, // v2
+    {-1,  1, -1, 'D'}, // v3
+    //face traseira (z = 1)
+    {-1, -1,  1, 'E'}, // v4
+    { 1, -1,  1, 'F'}, // v5
+    { 1,  1,  1, 'G'}, // v6
+    {-1,  1,  1, 'H'}  // v7
 };
 
-Face faces[MAX_FACES] = {
-    {{0, 1, 2, 3}}, // frente
-    {{4, 5, 6, 7}}, // trás
-    {{0, 1, 5, 4}}, // baixo
-    {{2, 3, 7, 6}}, // cima
-    {{1, 2, 6, 5}}, // direita
-    {{0, 3, 7, 4}}  // esquerda
+Face faces[6] = {
+    {{0, 1, 2, 3}}, //frente
+    {{4, 5, 6, 7}}, //trás
+    {{0, 1, 5, 4}}, //baixo
+    {{2, 3, 7, 6}}, //cima
+    {{1, 2, 6, 5}}, //direita
+    {{0, 3, 7, 4}}  //esquerda
 };
-
-
-//funções Auxiliares
 
 //projeção ortogonal 3D -> 2D
 void projetar(Vertex v, int *x2d, int *y2d) {
@@ -68,40 +66,26 @@ void limparMatriz(char m[MATRIX_SIZE][MATRIX_SIZE]) {
 void drawLine(int x0, int y0, int x1, int y1, char m[MATRIX_SIZE][MATRIX_SIZE]) {
     int dx = x1 - x0;
     int dy = y1 - y0;
-
     int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
-
-    if (steps == 0) {
-        if (x0 >= 0 && x0 < MATRIX_SIZE && y0 >= 0 && y0 < MATRIX_SIZE)
-            m[y0][x0] = '#';
-        return;
-    }
-
-    float xInc = dx / (float)steps;
-    float yInc = dy / (float)steps;
 
     float x = x0;
     float y = y0;
 
     for (int i = 0; i <= steps; i++) {
-        int xi = (int)(x + 0.5f);
-        int yi = (int)(y + 0.5f);
+        if (x >= 0 && x < MATRIX_SIZE && y >= 0 && y < MATRIX_SIZE)
+            m[(int)y][(int)x] = '#';
 
-        if (xi >= 0 && xi < MATRIX_SIZE && yi >= 0 && yi < MATRIX_SIZE) {
-            m[yi][xi] = '#';
-        }
-
-        x += xInc;
-        y += yInc;
+        x += dx / (float)steps;
+        y += dy / (float)steps;
     }
 }
 
-// desenha as arestas do cubo (wireframe)
+//desenha as arestas do cubo
 void desenharArestas(Vertex vertices[]) {
     char matriz[MATRIX_SIZE][MATRIX_SIZE];
     limparMatriz(matriz);
 
-    // 12 arestas do cubo (Shared Vertex)
+    //12 arestas do cubo (Shared Vertex)
     int arestas[12][2] = {
         {0,1}, {1,2}, {2,3}, {3,0}, // frente
         {4,5}, {5,6}, {6,7}, {7,4}, // trás
@@ -119,7 +103,23 @@ void desenharArestas(Vertex vertices[]) {
         drawLine(x0, y0, x1, y1, matriz);
     }
 
-    // imprime a matriz
+    //marcar a origem (SRU)
+    int origemX = MATRIX_SIZE / 2;
+    int origemY = MATRIX_SIZE / 2;
+
+    matriz[origemY][origemX] = 'O';
+
+    //desenhar os vértices
+    for (int i = 0; i < 8; i++) {
+        int x, y;
+        projetar(vertices[i], &x, &y);
+
+        if (x >= 0 && x < MATRIX_SIZE && y >= 0 && y < MATRIX_SIZE) {
+            matriz[y][x] = vertices[i].id;
+        }
+    }
+
+    //imprime a matriz
     for (int y = 0; y < MATRIX_SIZE; y++) {
         for (int x = 0; x < MATRIX_SIZE; x++) {
             printf("%c ", matriz[y][x]);
@@ -127,10 +127,6 @@ void desenharArestas(Vertex vertices[]) {
         printf("\n");
     }
 }
-
-// ======================
-// Programa Principal
-// ======================
 
 int main() {
     printf("Cubo 3D com Shared Vertex (projecao ortogonal 3D -> 2D)\n\n");
