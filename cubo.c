@@ -42,15 +42,10 @@ Face faces[6] = {
 //projeção ortogonal 3D -> 2D
 void projetar(Vertex v, int *x2d, int *y2d) {
     float escala = 5.0f;
-    float ang = 45.0f * 3.14159265f / 180.0f; // 45 graus em radianos
-
-    //projeção ortogonal simples
-    float xp = v.x + v.z * cos(ang);
-    float yp = v.y + v.z * sin(ang);
 
     //mapeia para coordenadas da matriz SRU
-    *x2d = (int)(xp * escala) + MATRIX_SIZE / 2;
-    *y2d = (int)(yp * escala) + MATRIX_SIZE / 2;
+    *x2d = (int)(v.x * escala) + MATRIX_SIZE / 2;
+    *y2d = (int)(v.y * escala) + MATRIX_SIZE / 2;
 }
 
 //limpa a matriz SRU

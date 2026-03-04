@@ -28,12 +28,11 @@ arestas = [
 # =========================
 def projetar(v):
     escala = 5
-    ang = math.radians(45)
 
     x, y, z = v
 
-    xp = x + z * math.cos(ang)
-    yp = y + z * math.sin(ang)
+    xp = x
+    yp = y
 
     x2d = int(xp * escala + MATRIX_SIZE / 2)
     y2d = int(yp * escala + MATRIX_SIZE / 2)
