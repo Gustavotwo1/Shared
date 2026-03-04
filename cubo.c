@@ -129,7 +129,7 @@ void desenharArestas(Vertex vertices[]) {
 }
 
 int main() {
-    printf("Cubo 3D com Shared Vertex (projecao ortogonal 3D -> 2D)\n\n");
+    printf("Cubo 3D com Shared Vertex\n\n");
     desenharArestas(vertices);
     return 0;
 }
