@@ -2,9 +2,8 @@ import math
 
 MATRIX_SIZE = 30
 
-# =========================
-# Shared Vertex (8 vértices)
-# =========================
+
+#hared Vertex (8 vértices)
 vertices = [
     (-1, -1, -1),  # v0
     ( 1, -1, -1),  # v1
@@ -16,16 +15,14 @@ vertices = [
     (-1,  1,  1)   # v7
 ]
 
-# 12 arestas do cubo
+#12 arestas do cubo
 arestas = [
     (0,1), (1,2), (2,3), (3,0),
     (4,5), (5,6), (6,7), (7,4),
     (0,4), (1,5), (2,6), (3,7)
 ]
 
-# =========================
-# Projeção 3D → 2D
-# =========================
+#projeção 3D → 2D
 def projetar(v):
     escala = 5
 
@@ -40,16 +37,12 @@ def projetar(v):
     return x2d, y2d
 
 
-# =========================
-# Criar matriz (SRU)
-# =========================
+#criar matriz (SRU)
 def criar_matriz():
     return [['.' for _ in range(MATRIX_SIZE)] for _ in range(MATRIX_SIZE)]
 
 
-# =========================
-# Algoritmo DDA
-# =========================
+#algoritmo DDA
 def draw_line(x0, y0, x1, y1, matriz):
     dx = x1 - x0
     dy = y1 - y0
@@ -75,10 +68,7 @@ def draw_line(x0, y0, x1, y1, matriz):
         x += x_inc
         y += y_inc
 
-
-# =========================
-# Desenhar cubo
-# =========================
+#desenhar cubo
 def desenhar_cubo():
     matriz = criar_matriz()
 
@@ -95,8 +85,5 @@ def desenhar_cubo():
         print(' '.join(linha))
 
 
-# =========================
-# MAIN
-# =========================
 print("Cubo 3D - Shared Vertex (Python)\n")
 desenhar_cubo()
