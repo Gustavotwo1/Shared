@@ -114,11 +114,12 @@ desenhar_cubo()
 while(True):
     print(''' 
     ==========Opções==========
-            1: rotação
-            2: translção
-            3: escala
-            4: cisalhar
-            5: sair\n''')
+            1: Rotacionar
+            2: Transladar
+            3: Escalar
+            4: Cisalhar
+            5: Espelhar
+            6: sair\n''')
 
     opcao = int(input("Escolha atranformação que deseja executar: "))
 
@@ -135,6 +136,9 @@ while(True):
         pass
 
     elif opcao == 5:
+        pass
+
+    elif opcao == 6:
         break
     
     else:
