@@ -2,7 +2,6 @@ import math
 
 MATRIX_SIZE = 30
 
-
 #hared Vertex (8 vértices)
 vertices = [
     (-1, -1, -1),  # v0
@@ -24,13 +23,25 @@ arestas = [
 
 #projeção 3D → 2D
 def projetar(v):
-    escala = 5
-
+    escala = 7
     x, y, z = v
 
-    xp = x
-    yp = y
+    # Rotação simples para o cubo não parecer um quadrado chapado
+    # Rotacionando em torno do eixo Y e X (30 graus)
+    rad = math.radians(30)
 
+    # Rotação em Y
+    nx = x * math.cos(rad) + z * math.sin(rad)
+    nz = -x * math.sin(rad) + z * math.cos(rad)
+
+    # Rotação em X
+    ny = y * math.cos(rad) - nz * math.sin(rad)
+
+    # PROJEÇÃO ORTOGONAL (Mapear x,y,z -> x,y simplesmente ignorando o z)
+    xp = nx
+    yp = ny
+
+    # Mapeamento para a matriz (SRU)
     x2d = int(xp * escala + MATRIX_SIZE / 2)
     y2d = int(yp * escala + MATRIX_SIZE / 2)
 
@@ -80,10 +91,52 @@ def desenhar_cubo():
         x1, y1 = projetar(v1)
 
         draw_line(x0, y0, x1, y1, matriz)
+    
+    # marcar origem
+    origem_x = MATRIX_SIZE // 2
+    origem_y = MATRIX_SIZE // 2
+
+    matriz[origem_y][origem_x] = 'O'
 
     for linha in matriz:
         print(' '.join(linha))
 
 
+
+#main
+
 print("Cubo 3D - Shared Vertex (Python)\n")
 desenhar_cubo()
+
+
+#menu de tranformções
+#apos a cração da funções sera chamado a desenha cubo em cada opção
+while(True):
+    print(''' 
+    ==========Opções==========
+            1: rotação
+            2: translção
+            3: escala
+            4: cisalhar
+            5: sair\n''')
+
+    opcao = int(input("Escolha atranformação que deseja executar: "))
+
+    if opcao == 1:
+        pass
+
+    elif opcao == 2:
+        pass
+
+    elif opcao == 3:
+        pass
+
+    elif opcao == 4:
+        pass
+
+    elif opcao == 5:
+        break
+    
+    else:
+        print("\nColoque uma opção valida!\n")
+
