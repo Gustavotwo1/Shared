@@ -2,6 +2,10 @@ import math
 
 MATRIX_SIZE = 30
 
+tx = 2  
+ty = 1  
+tz = 0 
+
 #hared Vertex (8 vértices)
 vertices = [
     (-1, -1, -1),  # v0
@@ -25,6 +29,10 @@ arestas = [
 def projetar(v):
     escala = 7
     x, y, z = v
+
+    x = x + tx
+    y = y + ty
+    z = z + tz
 
     # Rotação simples para o cubo não parecer um quadrado chapado
     # Rotacionando em torno do eixo Y e X (30 graus)
