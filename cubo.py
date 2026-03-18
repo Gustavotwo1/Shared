@@ -198,4 +198,4 @@ while True:
         break
 
     else:
-        print("Opção não implementada ainda.\n")
+        print("opção invalida.\n")
