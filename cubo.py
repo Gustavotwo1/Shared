@@ -24,7 +24,7 @@ arestas = [
 
 # projeção 3D → 2D
 def projetar(v):
-    escala = 2
+    escala = 5
     x, y, z = v
 
     rad = math.radians(30)
