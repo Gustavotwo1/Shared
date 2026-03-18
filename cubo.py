@@ -1,33 +1,32 @@
 import math
 
-MATRIX_SIZE = 30
+MATRIX_SIZE = 45
 
-#hared Vertex (8 vértices)
+# shared Vertex (8 vértices)
 vertices = [
-    (-1, -1, -1),  # v0
-    ( 1, -1, -1),  # v1
-    ( 1,  1, -1),  # v2
-    (-1,  1, -1),  # v3
-    (-1, -1,  1),  # v4
-    ( 1, -1,  1),  # v5
-    ( 1,  1,  1),  # v6
-    (-1,  1,  1)   # v7
+    (1, 1, -1),
+    (3, 1, -1),
+    (3, 3, -1),
+    (1, 3, -1),
+
+    (1, 1, 1),
+    (3, 1, 1),
+    (3, 3, 1),
+    (1, 3, 1)
 ]
 
-#12 arestas do cubo
+# 12 arestas do cubo
 arestas = [
     (0,1), (1,2), (2,3), (3,0),
     (4,5), (5,6), (6,7), (7,4),
     (0,4), (1,5), (2,6), (3,7)
 ]
 
-#projeção 3D → 2D
+# projeção 3D → 2D
 def projetar(v):
-    escala = 7
+    escala = 2
     x, y, z = v
 
-    # Rotação simples para o cubo não parecer um quadrado chapado
-    # Rotacionando em torno do eixo Y e X (30 graus)
     rad = math.radians(30)
 
     # Rotação em Y
@@ -37,29 +36,26 @@ def projetar(v):
     # Rotação em X
     ny = y * math.cos(rad) - nz * math.sin(rad)
 
-    # PROJEÇÃO ORTOGONAL (Mapear x,y,z -> x,y simplesmente ignorando o z)
     xp = nx
     yp = ny
 
-    # Mapeamento para a matriz (SRU)
     x2d = int(xp * escala + MATRIX_SIZE / 2)
-    y2d = int(yp * escala + MATRIX_SIZE / 2)
+    y2d = int(-yp * escala + MATRIX_SIZE / 2)
 
     return x2d, y2d
 
 
-#criar matriz (SRU)
+# criar matriz (SRU)
 def criar_matriz():
     return [['.' for _ in range(MATRIX_SIZE)] for _ in range(MATRIX_SIZE)]
 
 
-#algoritmo DDA
+# algoritmo DDA
 def draw_line(x0, y0, x1, y1, matriz):
     dx = x1 - x0
     dy = y1 - y0
 
     steps = max(abs(dx), abs(dy))
-
     if steps == 0:
         return
 
@@ -79,10 +75,9 @@ def draw_line(x0, y0, x1, y1, matriz):
         x += x_inc
         y += y_inc
 
-#desenhar cubo
-def desenhar_cubo():
-    matriz = criar_matriz()
 
+# desenhar cubo
+def desenhar_cubo(vertices, matriz):
     for a in arestas:
         v0 = vertices[a[0]]
         v1 = vertices[a[1]]
@@ -91,8 +86,10 @@ def desenhar_cubo():
         x1, y1 = projetar(v1)
 
         draw_line(x0, y0, x1, y1, matriz)
-    
-    # marcar origem
+
+
+# mostrar matriz
+def mostrar_matriz(matriz):
     origem_x = MATRIX_SIZE // 2
     origem_y = MATRIX_SIZE // 2
 
@@ -102,16 +99,43 @@ def desenhar_cubo():
         print(' '.join(linha))
 
 
+# matriz de reflexão
+def matriz_espelhamento(eixo):
+    if eixo == 'x':
+        return [
+            [1, 0, 0],
+            [0, -1, 0],
+            [0, 0, 1]
+        ]
+    elif eixo == 'y':
+        return [
+            [-1, 0, 0],
+            [0, 1, 0],
+            [0, 0, 1]
+        ]
 
-#main
+
+# aplica reflexão no vértice
+def matriz_refletida(Mr, v):
+    x, y, z = v
+    x_ref = Mr[0][0]*x + Mr[0][1]*y + Mr[0][2]*z
+    y_ref = Mr[1][0]*x + Mr[1][1]*y + Mr[1][2]*z
+    z_ref = Mr[2][0]*x + Mr[2][1]*y + Mr[2][2]*z
+    
+    return (x_ref, y_ref, z_ref)
+
+
+# ================= MAIN =================
 
 print("Cubo 3D - Shared Vertex (Python)\n")
-desenhar_cubo()
+
+# desenho inicial
+matriz = criar_matriz()
+desenhar_cubo(vertices, matriz)
+mostrar_matriz(matriz)
 
 
-#menu de tranformções
-#apos a cração da funções sera chamado a desenha cubo em cada opção
-while(True):
+while True:
     print(''' 
     ==========Opções==========
             1: Rotacionar
@@ -121,26 +145,45 @@ while(True):
             5: Espelhar
             6: sair\n''')
 
-    opcao = int(input("Escolha atranformação que deseja executar: "))
+    opcao = int(input("Escolha a transformação: "))
 
     if opcao == 1:
-        pass
-
+        print("Opção não implementada ainda.\n")
+    
     elif opcao == 2:
-        pass
-
+        print("Opção não implementada ainda.\n")    
+    
     elif opcao == 3:
-        pass
-
+        print("Opção não implementada ainda.\n")
+    
     elif opcao == 4:
-        pass
+        print("Opção não implementada ainda.\n")
 
     elif opcao == 5:
-        pass
+        eixo = input("Digite o eixo (x ou y): ").lower()
+
+        if eixo in ['x', 'y']:
+            Mr = matriz_espelhamento(eixo)
+
+            vertices_refletidos = [
+                matriz_refletida(Mr, v) for v in vertices
+            ]
+
+            # matriz nova (limpa)
+            matriz = criar_matriz()
+
+            # desenha os DOIS cubos
+            desenhar_cubo(vertices, matriz)
+            desenhar_cubo(vertices_refletidos, matriz)
+
+            # mostra resultado
+            mostrar_matriz(matriz)
+
+        else:
+            print("Eixo inválido!")
 
     elif opcao == 6:
         break
-    
-    else:
-        print("\nColoque uma opção valida!\n")
 
+    else:
+        print("Opção não implementada ainda.\n")
