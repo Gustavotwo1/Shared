@@ -4,18 +4,21 @@ MATRIX_SIZE = 45
 
 # shared Vertex (8 vértices)
 vertices = [
-    (1, 1, -1),
-    (3, 1, -1),
-    (3, 3, -1),
-    (1, 3, -1),
+    (1, 1, -1),#v0
+    (3, 1, -1),#v1
+    (3, 3, -1),#v2
+    (1, 3, -1),#v3
 
-    (1, 1, 1),
-    (3, 1, 1),
-    (3, 3, 1),
-    (1, 3, 1)
+    (1, 1, 1),#v4
+    (3, 1, 1),#v5
+    (3, 3, 1),#v6
+    (1, 3, 1) #v7
 ]
 
+nome_Vertice = ["A", "B", "C", "D", "E", "F", "G", "H",]
+
 # 12 arestas do cubo
+# dicionario aplicando o nome de cada aresta
 arestas = [
     (0,1), (1,2), (2,3), (3,0),
     (4,5), (5,6), (6,7), (7,4),
@@ -87,6 +90,13 @@ def desenhar_cubo(vertices, matriz):
 
         draw_line(x0, y0, x1, y1, matriz)
 
+        #nomeando os vertices do cubo
+        for i, v in enumerate(vertices):
+            x, y = projetar(v)
+
+            if 0 <= x < MATRIX_SIZE and 0 <= y < MATRIX_SIZE:
+                matriz[y][x] = nome_Vertice[i]
+
 
 # mostrar matriz
 def mostrar_matriz(matriz):
@@ -123,7 +133,6 @@ def matriz_refletida(Mr, v):
     z_ref = Mr[2][0]*x + Mr[2][1]*y + Mr[2][2]*z
     
     return (x_ref, y_ref, z_ref)
-
 
 # ================= MAIN =================
 
@@ -164,6 +173,8 @@ while True:
 
         if eixo in ['x', 'y']:
             Mr = matriz_espelhamento(eixo)
+            
+
 
             vertices_refletidos = [
                 matriz_refletida(Mr, v) for v in vertices
@@ -174,6 +185,7 @@ while True:
 
             # desenha os DOIS cubos
             desenhar_cubo(vertices, matriz)
+
             desenhar_cubo(vertices_refletidos, matriz)
 
             # mostra resultado
