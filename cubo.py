@@ -16,7 +16,7 @@ vertices = [
 ]
 
 #nomeando os vértices do cubo
-nome_Vertice = ["A", "B", "C", "D", "E", "F", "G", "H"]
+nome_Vertice = ["H", "G", "F", "E", "D", "C", "B", "A"]
 
 # 12 arestas do cubo
 arestas = [
@@ -121,6 +121,11 @@ def transladar(vertices, tx, ty):
 
     return novos_vertices
     
+def mostrar_vertices(vertices, titulo):
+    print(f"\n{titulo}")
+    for i, (x, y, z) in enumerate(vertices):
+        nome = nome_Vertice[i]
+        print(f"{nome}: ({x:.2f}, {y:.2f}, {z:.2f})")
 
 # matriz de reflexão
 def matriz_espelhamento(eixo):
@@ -181,14 +186,18 @@ while True:
     elif opcao == 2:
         tx = float(input("Digite tx: "))
         ty = float(input("Digite ty: "))
-         
+
+        mostrar_vertices(vertices, "Vértices Originais")
+
         vertices = transladar(vertices, tx, ty)
         
         matriz = criar_matriz()
-        
+
+        mostrar_vertices(vertices, "Vértices Transladados")
         desenhar_cubo(vertices, matriz)
         
         mostrar_matriz(matriz)
+        
         
     elif opcao == 3:
         print("Opção não implementada ainda.\n")
@@ -214,6 +223,9 @@ while True:
             # desenha os DOIS cubos
             desenhar_cubo(vertices, matriz)
 
+            mostrar_vertices(vertices, "Vértices Originais")
+            mostrar_vertices(vertices_refletidos, "Vértices Refletidos")
+            
             desenhar_cubo(vertices_refletidos, matriz)
 
             # mostra resultado
