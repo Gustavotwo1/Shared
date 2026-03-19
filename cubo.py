@@ -30,17 +30,8 @@ def projetar(v):
     escala = 5
     x, y, z = v
 
-    rad = math.radians(30)
-
-    # Rotação em Y
-    nx = x * math.cos(rad) + z * math.sin(rad)
-    nz = -x * math.sin(rad) + z * math.cos(rad)
-
-    # Rotação em X
-    ny = y * math.cos(rad) - nz * math.sin(rad)
-
-    xp = nx
-    yp = ny
+    xp = x
+    yp = y
 
     x2d = int(xp * escala + MATRIX_SIZE / 2)
     y2d = int(-yp * escala + MATRIX_SIZE / 2)
@@ -231,6 +222,27 @@ def matriz_refletida(Mr, v):
     
     return (x_ref, y_ref, z_ref)
 
+#-------------------- ------------------  matriz de rotação -------------------- ------------------ ##
+def rotacionar(vertices, angulo, eixo):
+    rad = math.radians(angulo)
+    
+    novos_vertices = []
+
+    for v in vertices:
+        x, y, z = v
+
+        if eixo == 'x':
+            y_novo = round(y * math.cos(rad) - z * math.sin(rad), 2)
+            z_novo = round(y * math.sin(rad) + z * math.cos(rad), 2)
+            novos_vertices.append((x, y_novo, z_novo))
+
+        elif eixo == 'y':
+            x_novo = round(x * math.cos(rad) + z * math.sin(rad), 2)
+            z_novo = round(-x * math.sin(rad) + z * math.cos(rad), 2)
+            novos_vertices.append((x_novo, y, z_novo))
+
+    return novos_vertices
+
 # ================= MAIN =================
 
 print("Cubo 3D - Shared Vertex (Python)\n")
@@ -254,7 +266,19 @@ while True:
     opcao = int(input("Escolha a transformação: "))
 
     if opcao == 1:
-        print("Opção não implementada ainda.\n")
+        eixo = input("Escolha o eixo (x ou y): ").lower()
+        angulo = float(input("Digite o ângulo de rotação: "))
+
+        mostrar_vertices(vertices, "Vértices Originais")    
+
+        vertices = rotacionar(vertices, angulo, eixo)
+
+        mostrar_vertices(vertices, "Vértices Rotacionados")
+
+        print("\nCubo rotacionado:\n")
+        matriz = criar_matriz()
+        desenhar_cubo(vertices, matriz)
+        mostrar_matriz(matriz)
     
     elif opcao == 2:
         tx = float(input("Digite tx: "))
@@ -291,8 +315,6 @@ while True:
         if eixo in ['x', 'y', 'xy']:
             Mr = matriz_espelhamento(eixo)
             
-
-
             vertices_refletidos = [
                 matriz_refletida(Mr, v) for v in vertices
             ]
