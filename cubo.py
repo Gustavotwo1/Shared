@@ -30,17 +30,8 @@ def projetar(v):
     escala = 5
     x, y, z = v
 
-    rad = math.radians(30)
-
-    # Rotação em Y
-    nx = x * math.cos(rad) + z * math.sin(rad)
-    nz = -x * math.sin(rad) + z * math.cos(rad)
-
-    # Rotação em X
-    ny = y * math.cos(rad) - nz * math.sin(rad)
-
-    xp = nx
-    yp = ny
+    xp = x
+    yp = y
 
     x2d = int(xp * escala + MATRIX_SIZE / 2)
     y2d = int(-yp * escala + MATRIX_SIZE / 2)
@@ -231,16 +222,7 @@ def matriz_refletida(Mr, v):
     
     return (x_ref, y_ref, z_ref)
 
-# ================= MAIN =================
-
-print("Cubo 3D - Shared Vertex (Python)\n")
-
-# desenho inicial
-matriz = criar_matriz()
-desenhar_cubo(vertices, matriz)
-mostrar_matriz(matriz)
-
-#Rotação
+#-------------------- ------------------  matriz de rotação -------------------- ------------------ ##
 def rotacionar(vertices, angulo, eixo):
     rad = math.radians(angulo)
     
@@ -261,6 +243,15 @@ def rotacionar(vertices, angulo, eixo):
 
     return novos_vertices
 
+# ================= MAIN =================
+
+print("Cubo 3D - Shared Vertex (Python)\n")
+
+# desenho inicial
+matriz = criar_matriz()
+desenhar_cubo(vertices, matriz)
+mostrar_matriz(matriz)
+
 
 while True:
     print(''' 
@@ -275,19 +266,14 @@ while True:
     opcao = int(input("Escolha a transformação: "))
 
     if opcao == 1:
-        pass
         eixo = input("Escolha o eixo (x ou y): ").lower()
         angulo = float(input("Digite o ângulo de rotação: "))
 
-        print("\nAntes da rotação:")
-        for v in vertices:
-            print(v)
+        mostrar_vertices(vertices, "Vértices Originais")    
 
         vertices = rotacionar(vertices, angulo, eixo)
 
-        print("\nDepois da rotação:")
-        for v in vertices:
-            print(v)
+        mostrar_vertices(vertices, "Vértices Rotacionados")
 
         print("\nCubo rotacionado:\n")
         matriz = criar_matriz()
@@ -329,8 +315,6 @@ while True:
         if eixo in ['x', 'y', 'xy']:
             Mr = matriz_espelhamento(eixo)
             
-
-
             vertices_refletidos = [
                 matriz_refletida(Mr, v) for v in vertices
             ]
