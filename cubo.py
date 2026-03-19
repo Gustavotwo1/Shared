@@ -109,7 +109,7 @@ def mostrar_matriz(matriz):
         print(' '.join(linha))
 
 
-# translação
+## -------------------- -------------------- translação -------------------- ------------------ ##
 def transladar(vertices, tx, ty):
     novos_vertices = []
 
@@ -127,7 +127,80 @@ def mostrar_vertices(vertices, titulo):
         nome = nome_Vertice[i]
         print(f"{nome}: ({x:.2f}, {y:.2f}, {z:.2f})")
 
-# matriz de reflexão
+
+## -------------------- -------------------- Cisalhamento -------------------- ------------------ ##
+
+def multiplicar_matriz(matriz, vetor):
+    resultado = [0, 0, 0]
+
+    for i in range(3):
+        for j in range(3):
+            resultado[i] += matriz[i][j] * vetor[j]
+
+    return resultado
+
+def calcular_centro(vertices):
+    x = sum(v[0] for v in vertices) / len(vertices)
+    y = sum(v[1] for v in vertices) / len(vertices)
+    z = sum(v[2] for v in vertices) / len(vertices)
+    return (x, y, z)
+
+def cisalhar(tipo, s=1.8):
+
+    global vertices
+
+    if tipo == "yx":  # y = y + s⋅x
+        matriz = [
+            [1, 0, 0],
+            [s, 1, 0],
+            [0, 0, 1]
+        ]
+
+    elif tipo == "xy":  # x = x + s·y
+
+        matriz = [
+            [1, s, 0],
+            [0, 1, 0],
+            [0, 0, 1]
+        ]
+
+    elif tipo == "xz": # x muda baseado em z
+        matriz = [
+            [1, 0, s],
+            [0, 1, 0],
+            [0, 0, 1]
+        ]
+
+    else:
+        print("Tipo inválido")
+        return
+
+    cx, cy, cz = calcular_centro(vertices)
+
+    novos_vertices = []
+
+    for v in vertices:
+        x, y, z = v
+
+        #  Translada para origem
+        x -= cx
+        y -= cy
+        z -= cz
+
+        #  Aplica cisalhamento
+        resultado = multiplicar_matriz(matriz, [x, y, z])
+
+        #  Volta para posição original
+        x_final = resultado[0] + cx
+        y_final = resultado[1] + cy
+        z_final = resultado[2] + cz
+
+        novos_vertices.append((x_final, y_final, z_final))
+
+    vertices = novos_vertices
+
+#-------------------- ------------------  matriz de reflexão -------------------- ------------------ ##
+
 def matriz_espelhamento(eixo):
     if eixo == 'x':
         return [
@@ -203,7 +276,14 @@ while True:
         print("Opção não implementada ainda.\n")
     
     elif opcao == 4:
-        print("Opção não implementada ainda.\n")
+        relacao = input("Digite a relação de cisalhamento (xy, yx, xz): ")
+
+        print("\nCubo 3D - Após o Cisalhamento")
+
+        cisalhar(relacao, 0.8)
+        matriz = criar_matriz()
+        desenhar_cubo(vertices, matriz)
+        mostrar_matriz(matriz)
 
     elif opcao == 5:
         eixo = input("Digite o eixo (x, y ou xy): ").lower()
