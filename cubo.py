@@ -109,6 +109,19 @@ def mostrar_matriz(matriz):
         print(' '.join(linha))
 
 
+# translação
+def transladar(vertices, tx, ty):
+    novos_vertices = []
+
+    for (x, y, z) in vertices:
+        x = x + tx
+        y = y + ty
+       
+        novos_vertices.append((x, y, z))
+
+    return novos_vertices
+    
+
 # matriz de reflexão
 def matriz_espelhamento(eixo):
     if eixo == 'x':
@@ -160,8 +173,17 @@ while True:
         print("Opção não implementada ainda.\n")
     
     elif opcao == 2:
-        print("Opção não implementada ainda.\n")    
-    
+        tx = float(input("Digite tx: "))
+        ty = float(input("Digite ty: "))
+         
+        vertices = transladar(vertices, tx, ty)
+        
+        matriz = criar_matriz()
+        
+        desenhar_cubo(vertices, matriz)
+        
+        mostrar_matriz(matriz)
+        
     elif opcao == 3:
         print("Opção não implementada ainda.\n")
     
