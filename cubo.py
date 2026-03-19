@@ -302,9 +302,12 @@ while True:
     elif opcao == 4:
         relacao = input("Digite a relação de cisalhamento (xy, yx, xz): ")
 
+        mostrar_vertices(vertices, "Vértices Originais")    
         print("\nCubo 3D - Após o Cisalhamento")
 
         cisalhar(relacao, 0.8)
+        #coordenadas dos vértices após cisalhamento
+        mostrar_vertices(vertices, "Vértices Cisalhados")
         matriz = criar_matriz()
         desenhar_cubo(vertices, matriz)
         mostrar_matriz(matriz)
