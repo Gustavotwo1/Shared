@@ -4,16 +4,19 @@ MATRIX_SIZE = 45
 
 # shared Vertex (8 vértices)
 vertices = [
-    (1, 1, -1),
-    (3, 1, -1),
-    (3, 3, -1),
-    (1, 3, -1),
+    (1, 1, -1),#v0
+    (3, 1, -1),#v1
+    (3, 3, -1),#v2
+    (1, 3, -1),#v3
 
-    (1, 1, 1),
-    (3, 1, 1),
-    (3, 3, 1),
-    (1, 3, 1)
+    (1, 1, 1),#v4
+    (3, 1, 1),#v5
+    (3, 3, 1),#v6
+    (1, 3, 1) #v7
 ]
+
+#nomeando os vértices do cubo
+nome_Vertice = ["A", "B", "C", "D", "E", "F", "G", "H"]
 
 # 12 arestas do cubo
 arestas = [
@@ -24,7 +27,7 @@ arestas = [
 
 # projeção 3D → 2D
 def projetar(v):
-    escala = 2
+    escala = 5
     x, y, z = v
 
     rad = math.radians(30)
@@ -87,6 +90,13 @@ def desenhar_cubo(vertices, matriz):
 
         draw_line(x0, y0, x1, y1, matriz)
 
+        #nomeando os vertices do cubo
+        for i, v in enumerate(vertices):
+            x, y = projetar(v)
+
+            if 0 <= x < MATRIX_SIZE and 0 <= y < MATRIX_SIZE:
+                matriz[y][x] = nome_Vertice[i]
+
 
 # mostrar matriz
 def mostrar_matriz(matriz):
@@ -98,6 +108,19 @@ def mostrar_matriz(matriz):
     for linha in matriz:
         print(' '.join(linha))
 
+
+# translação
+def transladar(vertices, tx, ty):
+    novos_vertices = []
+
+    for (x, y, z) in vertices:
+        x = x + tx
+        y = y + ty
+       
+        novos_vertices.append((x, y, z))
+
+    return novos_vertices
+    
 
 # matriz de reflexão
 def matriz_espelhamento(eixo):
@@ -113,6 +136,12 @@ def matriz_espelhamento(eixo):
             [0, 1, 0],
             [0, 0, 1]
         ]
+    else: # eixo 'xy'
+        return [
+            [-1, 0, 0],
+            [0, -1, 0],
+            [0, 0, 1]
+        ]
 
 
 # aplica reflexão no vértice
@@ -123,7 +152,6 @@ def matriz_refletida(Mr, v):
     z_ref = Mr[2][0]*x + Mr[2][1]*y + Mr[2][2]*z
     
     return (x_ref, y_ref, z_ref)
-
 
 # ================= MAIN =================
 
@@ -151,8 +179,17 @@ while True:
         print("Opção não implementada ainda.\n")
     
     elif opcao == 2:
-        print("Opção não implementada ainda.\n")    
-    
+        tx = float(input("Digite tx: "))
+        ty = float(input("Digite ty: "))
+         
+        vertices = transladar(vertices, tx, ty)
+        
+        matriz = criar_matriz()
+        
+        desenhar_cubo(vertices, matriz)
+        
+        mostrar_matriz(matriz)
+        
     elif opcao == 3:
         print("Opção não implementada ainda.\n")
     
@@ -160,10 +197,12 @@ while True:
         print("Opção não implementada ainda.\n")
 
     elif opcao == 5:
-        eixo = input("Digite o eixo (x ou y): ").lower()
+        eixo = input("Digite o eixo (x, y ou xy): ").lower()
 
-        if eixo in ['x', 'y']:
+        if eixo in ['x', 'y', 'xy']:
             Mr = matriz_espelhamento(eixo)
+            
+
 
             vertices_refletidos = [
                 matriz_refletida(Mr, v) for v in vertices
@@ -174,6 +213,7 @@ while True:
 
             # desenha os DOIS cubos
             desenhar_cubo(vertices, matriz)
+
             desenhar_cubo(vertices_refletidos, matriz)
 
             # mostra resultado
@@ -186,4 +226,4 @@ while True:
         break
 
     else:
-        print("Opção não implementada ainda.\n")
+        print("opção invalida.\n")
