@@ -240,6 +240,27 @@ matriz = criar_matriz()
 desenhar_cubo(vertices, matriz)
 mostrar_matriz(matriz)
 
+#Rotação
+def rotacionar(vertices, angulo, eixo):
+    rad = math.radians(angulo)
+    
+    novos_vertices = []
+
+    for v in vertices:
+        x, y, z = v
+
+        if eixo == 'x':
+            y_novo = round(y * math.cos(rad) - z * math.sin(rad), 2)
+            z_novo = round(y * math.sin(rad) + z * math.cos(rad), 2)
+            novos_vertices.append((x, y_novo, z_novo))
+
+        elif eixo == 'y':
+            x_novo = round(x * math.cos(rad) + z * math.sin(rad), 2)
+            z_novo = round(-x * math.sin(rad) + z * math.cos(rad), 2)
+            novos_vertices.append((x_novo, y, z_novo))
+
+    return novos_vertices
+
 
 while True:
     print(''' 
@@ -254,7 +275,24 @@ while True:
     opcao = int(input("Escolha a transformação: "))
 
     if opcao == 1:
-        print("Opção não implementada ainda.\n")
+        pass
+        eixo = input("Escolha o eixo (x ou y): ").lower()
+        angulo = float(input("Digite o ângulo de rotação: "))
+
+        print("\nAntes da rotação:")
+        for v in vertices:
+            print(v)
+
+        vertices = rotacionar(vertices, angulo, eixo)
+
+        print("\nDepois da rotação:")
+        for v in vertices:
+            print(v)
+
+        print("\nCubo rotacionado:\n")
+        matriz = criar_matriz()
+        desenhar_cubo(vertices, matriz)
+        mostrar_matriz(matriz)
     
     elif opcao == 2:
         tx = float(input("Digite tx: "))
