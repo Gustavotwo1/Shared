@@ -118,6 +118,32 @@ def mostrar_vertices(vertices, titulo):
         nome = nome_Vertice[i]
         print(f"{nome}: ({x:.2f}, {y:.2f}, {z:.2f})")
 
+## -------------------- -------------------- Escala ------------------------- ------------------ ##
+
+def escalar(vertices, sx, sy, sz):
+    cx, cy, cz = calcular_centro(vertices)
+    
+    novos_vertices = []
+
+    for (x, y, z) in vertices:
+        # leva para origem
+        x -= cx
+        y -= cy
+        z -= cz
+
+        # aplica escala
+        x *= sx
+        y *= sy
+        z *= sz
+
+        # volta para posição original
+        x += cx
+        y += cy
+        z += cz
+
+        novos_vertices.append((x, y, z))
+
+    return novos_vertices
 
 ## -------------------- -------------------- Cisalhamento -------------------- ------------------ ##
 
@@ -297,7 +323,20 @@ while True:
         
         
     elif opcao == 3:
-        print("Opção não implementada ainda.\n")
+        sx = float(input("Digite o fator de escala em X: "))
+        sy = float(input("Digite o fator de escala em Y: "))
+        sz = float(input("Digite o fator de escala em Z: "))
+
+        mostrar_vertices(vertices, "Vértices Originais")
+
+        vertices = escalar(vertices, sx, sy, sz)
+
+        mostrar_vertices(vertices, "Vértices Escalados")
+
+        print("\nCubo escalado:\n")
+        matriz = criar_matriz()
+        desenhar_cubo(vertices, matriz)
+        mostrar_matriz(matriz)
     
     elif opcao == 4:
         relacao = input("Digite a relação de cisalhamento (xy, yx, xz): ")
